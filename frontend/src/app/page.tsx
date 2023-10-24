@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 import Navbar from "@/components/navbar";
 
 import SearchBar from "@/components/searchBar";
 import FilterCard from "@/components/filterCard";
-import { Poem } from "@/utils/poem.type";
+import { Author, Poem, PoemName, Year } from "@/utils/poem.type";
 import PoemsCardContainer from "@/components/poemsCardContainer";
+import { getAllPoems, getAuthors, getPoemBySearch } from "@/utils/apiService";
 
 const poems = [
   [
@@ -1181,7 +1182,13 @@ const poems = [
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [serchResults, setSearchResults] = useState<Poem[][]>(poems); // [{}
-  //   [
+  const [selectedAuthors, setSelectedAuthors] = useState<Author[]>([]);
+  const [selectedYears, setSelectedYears] = useState<Year[]>([]);
+  const [selectedPoems, setSelectedPoems] = useState<PoemName[]>([]);
+  const [authors, setAuthors] = useState<Author[]>([]);
+  const [years, setYears] = useState<Year[]>([]);
+  const [poemNames, setPoemNames] = useState<PoemName[]>([]);
+
   //     {
   //       poem_id: 0,
   //       poem_name: "සුවන සදෙස",
@@ -2201,9 +2208,39 @@ export default function Home() {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearch = () => {
-    console.log(searchTerm);
+  const handleSearch = async () => {
+    try {
+      const result = await getPoemBySearch(searchTerm);
+      setSearchResults(result);
+    } catch (err) {
+      setSearchResults([]);
+      console.log(err);
+    }
   };
+
+  const getPoems = async () => {
+    try {
+      const response = await getAllPoems();
+      setSearchResults(response);
+    } catch (err) {
+      setSearchResults([]);
+      console.log(err);
+    }
+  };
+
+  const getAuthorsList = async (text: string) => {
+    try {
+      const response = await getAuthors(text);
+      setAuthors(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getPoems();
+    getAuthorsList("");
+  }, []);
 
   return (
     <div>
@@ -2217,10 +2254,22 @@ export default function Home() {
 
       <Grid container>
         <Grid item xs={3}>
-          <FilterCard />
+          <FilterCard
+            selectedAuthors={selectedAuthors}
+            selectedPoems={selectedPoems}
+            selectedYears={selectedYears}
+            authors={authors}
+            poemNames={poemNames}
+            years={years}
+            setSelectedAuthors={setSelectedAuthors}
+            setSelectedPoems={setSelectedPoems}
+            setSelectedYears={setSelectedYears}
+          />
         </Grid>
         <Grid item xs={9}>
-          <PoemsCardContainer poems={poems} />
+          {serchResults.length > 0 && (
+            <PoemsCardContainer poems={serchResults} />
+          )}
         </Grid>
       </Grid>
     </div>

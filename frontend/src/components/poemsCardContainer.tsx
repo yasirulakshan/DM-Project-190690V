@@ -8,6 +8,7 @@ interface Props {
 }
 
 const PoemsCardContainer: React.FC<Props> = ({ poems }) => {
+  console.log(poems);
   return (
     <Grid container spacing={2} marginLeft={5} paddingRight={8}>
       {poems.map((poem, index) => (

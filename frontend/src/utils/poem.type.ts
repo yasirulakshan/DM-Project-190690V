@@ -8,3 +8,15 @@ export interface Poem {
   metaphorical_terms: string;
   year: number;
 }
+
+export interface Author {
+  name: string;
+}
+
+export interface Year {
+  year: string;
+}
+
+export interface PoemName {
+  title: string;
+}

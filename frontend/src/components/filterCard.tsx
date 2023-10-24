@@ -7,55 +7,38 @@ import {
   TextField,
   Button,
 } from "@mui/material";
+import { Author, PoemName, Year } from "@/utils/poem.type";
 
-interface Author {
-  name: string;
+interface Props {
+  selectedAuthors: Author[];
+  selectedYears: Year[];
+  selectedPoems: PoemName[];
+  authors: Author[];
+  years: Year[];
+  poemNames: PoemName[];
+  setSelectedAuthors: (value: Author[]) => void;
+  setSelectedYears: (value: Year[]) => void;
+  setSelectedPoems: (value: PoemName[]) => void;
 }
 
-interface Year {
-  year: string;
-}
-
-interface Poem {
-  title: string;
-}
-
-const FilterCard = () => {
-  const [selectedAuthors, setSelectedAuthors] = useState<Author[]>([]);
-  const [selectedYears, setSelectedYears] = useState<Year[]>([]);
-  const [selectedPoems, setSelectedPoems] = useState<Poem[]>([]);
-
-  const authors: Author[] = [
-    { name: "William Shakespeare" },
-    { name: "Emily Dickinson" },
-    { name: "Langston Hughes" },
-    { name: "Maya Angelou" },
-    { name: "Robert Frost" },
-  ];
-
-  const years: Year[] = [
-    { year: "2021" },
-    { year: "2020" },
-    { year: "2019" },
-    { year: "2018" },
-    { year: "2017" },
-  ];
-
-  const poems: Poem[] = [
-    { title: "Sonnet 18" },
-    { title: "Because I could not stop for Death" },
-    { title: "I, Too" },
-    { title: "Still I Rise" },
-    { title: "The Road Not Taken" },
-  ];
-
+const FilterCard: React.FC<Props> = ({
+  selectedAuthors,
+  selectedYears,
+  selectedPoems,
+  authors,
+  years,
+  poemNames,
+  setSelectedAuthors,
+  setSelectedPoems,
+  setSelectedYears,
+}) => {
   const handleAuthorChange = (event: any, value: Author[]) =>
     setSelectedAuthors(value);
 
   const handleYearChange = (event: any, value: Year[]) =>
     setSelectedYears(value);
 
-  const handlePoemChange = (event: any, value: Poem[]) =>
+  const handlePoemChange = (event: any, value: PoemName[]) =>
     setSelectedPoems(value);
 
   const handleFilterClick = () => {
@@ -73,7 +56,7 @@ const FilterCard = () => {
     (year) => !selectedYears.find((selected) => selected.year === year.year)
   );
 
-  const poemOptions = poems.filter(
+  const poemOptions = poemNames.filter(
     (poem) => !selectedPoems.find((selected) => selected.title === poem.title)
   );
 
