@@ -458,4 +458,89 @@ export class PoemsService {
       throw error;
     }
   }
+
+  async getPoemNamesByInputText(
+    inputText: string
+  ): Promise<Record<string, any>> {
+    try {
+      const poems = await this.searchService.search({
+        query: {
+          //add match for fields poem_name, poet, year and line
+          multi_match: {
+            query: inputText,
+            type: "best_fields",
+            operator: "and",
+            fields: ["poem_name", "poet", "year", "line"],
+            //add fuzziness to match words that are similar to the input text
+            fuzziness: "AUTO",
+          },
+        },
+        aggs: {
+          distinct_poem_names: {
+            terms: {
+              field: "poem_name",
+            },
+          },
+        },
+      });
+      return poems.aggs.distinct_poem_names.buckets;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getPoetsByInputText(inputText: string): Promise<Record<string, any>> {
+    try {
+      const poems = await this.searchService.search({
+        query: {
+          //add match for fields poem_name, poet, year and line
+          multi_match: {
+            query: inputText,
+            type: "best_fields",
+            operator: "and",
+            fields: ["poem_name", "poet", "year", "line"],
+            //add fuzziness to match words that are similar to the input text
+            fuzziness: "AUTO",
+          },
+        },
+        aggs: {
+          distinct_poem_names: {
+            terms: {
+              field: "poet",
+            },
+          },
+        },
+      });
+      return poems.aggs.distinct_poem_names.buckets;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getYearByInputText(inputText: string): Promise<Record<string, any>> {
+    try {
+      const poems = await this.searchService.search({
+        query: {
+          //add match for fields poem_name, poet, year and line
+          multi_match: {
+            query: inputText,
+            type: "best_fields",
+            operator: "and",
+            fields: ["poem_name", "poet", "year", "line"],
+            //add fuzziness to match words that are similar to the input text
+            fuzziness: "AUTO",
+          },
+        },
+        aggs: {
+          distinct_poem_names: {
+            terms: {
+              field: "year",
+            },
+          },
+        },
+      });
+      return poems.aggs.distinct_poem_names.buckets;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
