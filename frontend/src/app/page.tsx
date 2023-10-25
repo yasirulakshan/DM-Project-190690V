@@ -1,14 +1,24 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 import Navbar from "@/components/navbar";
 
 import SearchBar from "@/components/searchBar";
 import FilterCard from "@/components/filterCard";
-import { Author, Poem, PoemName, Year } from "@/utils/poem.type";
+import { Author, Poem, PoemName, Year, returnContent } from "@/utils/poem.type";
 import PoemsCardContainer from "@/components/poemsCardContainer";
-import { getAllPoems, getAuthors, getPoemBySearch } from "@/utils/apiService";
+import {
+  getAllPoemNames,
+  getAllPoems,
+  getAllPoetsNames,
+  getAllYears,
+  getAuthors,
+  getPoemBySearch,
+  getPoemNames,
+  getYears,
+} from "@/utils/apiService";
+import { text } from "stream/consumers";
 
 const poems = [
   [
@@ -2209,12 +2219,22 @@ export default function Home() {
   };
 
   const handleSearch = async () => {
-    try {
-      const result = await getPoemBySearch(searchTerm);
-      setSearchResults(result);
-    } catch (err) {
-      setSearchResults([]);
-      console.log(err);
+    if (searchTerm === "") {
+      getPoems();
+      getAllAuthors();
+      getAllYearsList();
+      getAllPoemNamesList();
+    } else {
+      try {
+        const result = await getPoemBySearch(searchTerm);
+        setSearchResults(result);
+        getAuthorsList(searchTerm);
+        getYearsList(searchTerm);
+        getPoemNamesList(searchTerm);
+      } catch (err) {
+        setSearchResults([]);
+        console.log(err);
+      }
     }
   };
 
@@ -2228,10 +2248,76 @@ export default function Home() {
     }
   };
 
+  const setAuthorsToList = (responseList: returnContent[]) => {
+    const tempAuthors = responseList.map((item) => {
+      return { name: item.key };
+    });
+    setAuthors(tempAuthors);
+  };
+
+  const setYearsToList = (responseList: returnContent[]) => {
+    const tempYears = responseList.map((item) => {
+      return { year: item.key };
+    });
+    setYears(tempYears);
+  };
+
+  const setPoemNamesToList = (responseList: returnContent[]) => {
+    const tempPoemNames = responseList.map((item) => {
+      return { title: item.key };
+    });
+    setPoemNames(tempPoemNames);
+  };
+
+  const getAllAuthors = async () => {
+    try {
+      const response = await getAllPoetsNames();
+      setAuthorsToList(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getAllYearsList = async () => {
+    try {
+      const response = await getAllYears();
+      setYearsToList(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getAllPoemNamesList = async () => {
+    try {
+      const response = await getAllPoemNames();
+      setPoemNamesToList(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const getAuthorsList = async (text: string) => {
     try {
       const response = await getAuthors(text);
-      setAuthors(response);
+      setAuthorsToList(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getYearsList = async (text: string) => {
+    try {
+      const response = await getYears(text);
+      setYearsToList(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getPoemNamesList = async (text: string) => {
+    try {
+      const response = await getPoemNames(text);
+      setPoemNamesToList(response);
     } catch (err) {
       console.log(err);
     }
@@ -2239,7 +2325,9 @@ export default function Home() {
 
   useEffect(() => {
     getPoems();
-    getAuthorsList("");
+    getAllAuthors();
+    getAllYearsList();
+    getAllPoemNamesList();
   }, []);
 
   return (

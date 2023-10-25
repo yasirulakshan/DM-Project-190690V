@@ -19,6 +19,21 @@ export class PoemsController {
     return await this.poemsService.getAllPoems();
   }
 
+  @Get("all-poems-names")
+  async getAllPoemNames(): Promise<Record<string, any>[]> {
+    return await this.poemsService.getAllPoemsNames();
+  }
+
+  @Get("all-poets-names")
+  async getAllPoetsNames(): Promise<Record<string, any>[]> {
+    return await this.poemsService.getPoetNames();
+  }
+
+  @Get("years")
+  async getYears(): Promise<Record<string, any>[]> {
+    return await this.poemsService.getYears();
+  }
+
   @Post("poems-by-text")
   async getPoemsByText(
     @Body("text") text: string

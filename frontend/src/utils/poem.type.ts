@@ -20,3 +20,8 @@ export interface Year {
 export interface PoemName {
   title: string;
 }
+
+export interface returnContent {
+  key: string;
+  doc_count: number;
+}

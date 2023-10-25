@@ -49,3 +49,53 @@ export const getAuthors = async (text: string) => {
     throw new Error("error fetching authors");
   }
 };
+
+export const getYears = async (text: string) => {
+  try {
+    const response = await axiosInstance.post(`/poem-year-by-text`, { text });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("error fetching years");
+  }
+};
+
+export const getPoemNames = async (text: string) => {
+  try {
+    const response = await axiosInstance.post(`/poem-names-by-text`, { text });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("error fetching poem names");
+  }
+};
+
+export const getAllPoemNames = async () => {
+  try {
+    const response = await axiosInstance.get(`/all-poems-names`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("error fetching poem names");
+  }
+};
+
+export const getAllPoetsNames = async () => {
+  try {
+    const response = await axiosInstance.get(`/all-poets-names`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("error fetching poets names");
+  }
+};
+
+export const getAllYears = async () => {
+  try {
+    const response = await axiosInstance.get(`/years`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("error fetching years");
+  }
+};
