@@ -2224,36 +2224,31 @@ export default function Home() {
     console.log("selectedPoems", selectedPoems);
     console.log("selectedYears", selectedYears);
 
-    const tempSearchResult = serchResults.filter((item) => {
-      if (
-        selectedAuthors.length === 0 &&
-        selectedPoems.length === 0 &&
-        selectedYears.length === 0
-      ) {
-        return item;
-      } else if (selectedAuthors.length === 0 && selectedPoems.length === 0) {
-        if (selectedYears.includes({ year: item[0].year.toString() })) {
-          return item;
-        }
-      } else if (selectedAuthors.length === 0) {
-        if (
-          selectedYears.includes({ year: item[0].year.toString() }) &&
-          selectedPoems.includes({ title: item[0].poem_name })
-        ) {
-          return item;
-        }
-      } else {
-        if (
-          selectedAuthors.includes({ name: item[0].poet }) &&
-          selectedPoems.includes({ title: item[0].poem_name }) &&
-          selectedYears.includes({ year: item[0].year.toString() })
-        ) {
-          return item;
-        }
-      }
-    });
-    console.log("tempSearchResult", tempSearchResult);
-    setPreviewResults(tempSearchResult);
+    let filteredResults = [...serchResults];
+
+    let tempAuthorsList = selectedAuthors.map((author) => author.name);
+    let tempPoemList = selectedPoems.map((poem) => poem.title);
+    let tempYearsList = selectedYears.map((year) => year.year);
+
+    if (tempAuthorsList.length > 0) {
+      filteredResults = filteredResults.filter((result) =>
+        tempAuthorsList.includes(result[0].poet)
+      );
+    }
+
+    if (selectedPoems.length > 0) {
+      filteredResults = filteredResults.filter((result) =>
+        tempPoemList.includes(result[0].poem_name)
+      );
+    }
+
+    if (selectedYears.length > 0) {
+      filteredResults = filteredResults.filter((result) =>
+        tempYearsList.includes(result[0].year.toString())
+      );
+    }
+
+    setPreviewResults(filteredResults);
   };
 
   const handleSearch = async () => {
