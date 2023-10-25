@@ -1198,6 +1198,7 @@ export default function Home() {
   const [authors, setAuthors] = useState<Author[]>([]);
   const [years, setYears] = useState<Year[]>([]);
   const [poemNames, setPoemNames] = useState<PoemName[]>([]);
+  const [previewResults, setPreviewResults] = useState<Poem[][]>(poems);
 
   //     {
   //       poem_id: 0,
@@ -2218,6 +2219,43 @@ export default function Home() {
     setSearchTerm(event.target.value);
   };
 
+  const handleFilterClick = () => {
+    console.log("selectedAuthors", selectedAuthors);
+    console.log("selectedPoems", selectedPoems);
+    console.log("selectedYears", selectedYears);
+
+    const tempSearchResult = serchResults.filter((item) => {
+      if (
+        selectedAuthors.length === 0 &&
+        selectedPoems.length === 0 &&
+        selectedYears.length === 0
+      ) {
+        return item;
+      } else if (selectedAuthors.length === 0 && selectedPoems.length === 0) {
+        if (selectedYears.includes({ year: item[0].year.toString() })) {
+          return item;
+        }
+      } else if (selectedAuthors.length === 0) {
+        if (
+          selectedYears.includes({ year: item[0].year.toString() }) &&
+          selectedPoems.includes({ title: item[0].poem_name })
+        ) {
+          return item;
+        }
+      } else {
+        if (
+          selectedAuthors.includes({ name: item[0].poet }) &&
+          selectedPoems.includes({ title: item[0].poem_name }) &&
+          selectedYears.includes({ year: item[0].year.toString() })
+        ) {
+          return item;
+        }
+      }
+    });
+    console.log("tempSearchResult", tempSearchResult);
+    setPreviewResults(tempSearchResult);
+  };
+
   const handleSearch = async () => {
     if (searchTerm === "") {
       getPoems();
@@ -2228,6 +2266,7 @@ export default function Home() {
       try {
         const result = await getPoemBySearch(searchTerm);
         setSearchResults(result);
+        setPreviewResults(result);
         getAuthorsList(searchTerm);
         getYearsList(searchTerm);
         getPoemNamesList(searchTerm);
@@ -2352,11 +2391,12 @@ export default function Home() {
             setSelectedAuthors={setSelectedAuthors}
             setSelectedPoems={setSelectedPoems}
             setSelectedYears={setSelectedYears}
+            handleFilterClick={handleFilterClick}
           />
         </Grid>
         <Grid item xs={9}>
           {serchResults.length > 0 && (
-            <PoemsCardContainer poems={serchResults} />
+            <PoemsCardContainer poems={previewResults} />
           )}
         </Grid>
       </Grid>

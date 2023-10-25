@@ -19,6 +19,7 @@ interface Props {
   setSelectedAuthors: (value: Author[]) => void;
   setSelectedYears: (value: Year[]) => void;
   setSelectedPoems: (value: PoemName[]) => void;
+  handleFilterClick: () => void;
 }
 
 const FilterCard: React.FC<Props> = ({
@@ -31,6 +32,7 @@ const FilterCard: React.FC<Props> = ({
   setSelectedAuthors,
   setSelectedPoems,
   setSelectedYears,
+  handleFilterClick,
 }) => {
   const handleAuthorChange = (event: any, value: Author[]) =>
     setSelectedAuthors(value);
@@ -40,12 +42,6 @@ const FilterCard: React.FC<Props> = ({
 
   const handlePoemChange = (event: any, value: PoemName[]) =>
     setSelectedPoems(value);
-
-  const handleFilterClick = () => {
-    console.log("Selected Authors :", selectedAuthors);
-    console.log("Selected Years :", selectedYears);
-    console.log("Selected Poems :", selectedPoems);
-  };
 
   const authorOptions = authors.filter(
     (author) =>
