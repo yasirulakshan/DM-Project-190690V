@@ -17,9 +17,18 @@ const PoemCard: React.FC<PoemCardProps> = ({ content }) => {
         <br />
         {content.length > 0 &&
           content.map((line, index) => (
-            <Typography variant="body2" component="p" key={index}>
-              {line.line}
-            </Typography>
+            <div>
+              <Typography
+                variant="body2"
+                component="p"
+                key={index}
+                color={line.metaphor_present_or_not === "Yes" ? "red" : "black"}
+              >
+                {line.line}
+              </Typography>
+
+              {index % 4 === 3 && <br />}
+            </div>
           ))}
       </CardContent>
     </Card>

@@ -18,7 +18,6 @@ import {
   getPoemNames,
   getYears,
 } from "@/utils/apiService";
-import { text } from "stream/consumers";
 
 const poems = [
   [
@@ -2276,6 +2275,7 @@ export default function Home() {
     try {
       const response = await getAllPoems();
       setSearchResults(response);
+      setPreviewResults(response);
     } catch (err) {
       setSearchResults([]);
       console.log(err);
