@@ -2390,9 +2390,7 @@ export default function Home() {
           />
         </Grid>
         <Grid item xs={9}>
-          {serchResults.length > 0 && (
-            <PoemsCardContainer poems={previewResults} />
-          )}
+          <PoemsCardContainer poems={previewResults} />
         </Grid>
       </Grid>
     </div>
